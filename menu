@@ -1,0 +1,107 @@
+#!/bin/bash
+echo "what do you want to do"
+select choice in add_user mod_user  change_user_password list_users add_group mod_group list_group enable_user disable_user show_user
+do
+case $choice in 
+add_user)
+echo enter user_name 
+read x
+echo enter password
+read y
+useradd $x 
+echo $y | passwd $x --stdin 
+echo 'done'  ;;
+#-------------------------------------------
+change_user_password)
+echo enter user_name 
+read x
+echo enter password
+read y
+echo $y | passwd $x --stdin 
+echo 'done' ;;
+#--------------------------------------------
+mod_user)
+echo enter user_name 
+read x
+echo 'what do you want [ change_primary_group - change_supplementary_group - add_comment - change_user_id ] ' 
+echo please choose form the above parcet 
+read z
+if [ $z = change_primary_group ]
+then
+echo enter the group_name 
+read a 
+usermod -g  $a  $x
+echo 'done'
+elif [ $z = change_supplementary_group ]
+then
+echo enter the group_name 
+read a 
+usermod -G  $a  $x
+echo 'done'
+elif [ $z = add_comment ]
+then 
+echo 'enter what do u want'
+read c
+usermod -c $"$c" $x
+echo 'done' 
+else 
+echo enter new_user_id
+read y 
+usermod -u  $y  $x 
+echo "done" 
+fi
+;;
+#-------------------------------------------
+list_users)
+cat /etc/passwd  ;; 
+#------------------------------------------------
+add_group)
+echo enter group_name 
+read x
+groupadd $x 
+echo 'done' ;;
+#-------------------------------------------------------
+mod_group)
+echo enter group_name 
+read x
+echo 'what do you want [ change_group_id - rename_group_name ] '
+read c
+if [ $c = change_group_id ]
+then 
+echo enter iD_group
+read d
+groupmod -g $d $x
+echo 'done'
+else
+echo enter new group_name 
+read y
+groupmod -n  $y  $x 
+echo 'done' 
+fi
+;;
+#-------------------------------------------
+list_group)
+cat /etc/group ;;
+#----------------------------------------------
+enable_user)
+echo enter user_name 
+read x
+usermod  -U  $x 
+echo 'done' ;;
+#--------------------------------------------
+disable_user)
+echo enter user_name 
+read x
+usermod  -L  $x 
+echo 'done' ;;
+#--------------------------------------------
+show_user)
+echo enter user_name 
+read x
+id  $x ;;
+#---------------------------
+*) echo  something get wrong  ;;
+
+
+esac
+done
